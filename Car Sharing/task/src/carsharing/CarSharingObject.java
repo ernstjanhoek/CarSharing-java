@@ -1,6 +1,7 @@
 package carsharing;
 
 abstract class CarSharingObject {
+    protected DBClient client;
     CarSharingObject(String name) {
         this.name = name;
     }

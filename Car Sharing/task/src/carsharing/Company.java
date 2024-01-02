@@ -1,46 +1,52 @@
 package carsharing;
 
-class Company {
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+class Company extends CarSharingObject {
     Company(String name) {
-        this.name = name;
-    }
-    private String name;
-    private Integer id;
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public Integer getId() {
-        return id;
-    }
-    public String toString() {
-        return this.id + ". " + this.name;
+        super(name);
     }
 }
-class Car {
-    Car(String name) {
-        this.name = name;
+class CompanyDao  extends CarSharingDao<Company> {
+    CompanyDao(DBClient client) {
+        super(client);
     }
-    private String name;
-    private Integer id;
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public ArrayList<Company> findAll() throws SQLException {
+        ArrayList<Company> companyArray = new ArrayList<>();
+        Statement statement = client.connection.createStatement();
+        String selectAll = "SELECT id, name FROM company;";
+        ResultSet resultSetItem = statement.executeQuery(selectAll);
+
+        while (resultSetItem.next()) {
+            int id = resultSetItem.getInt("id");
+            String name = resultSetItem.getString("name");
+            Company company = new Company(name);
+            company.setId(id);
+            companyArray.add(company);
+        }
+        return companyArray;
     }
-    public String getName() {
-        return name;
+    @Override
+    public Company findById(int id) {
+        return null;
     }
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public void add(Company object) throws SQLException {
+        String insertCompany = "INSERT INTO company (name) VALUES (?)";
+        PreparedStatement statement = client.connection.prepareStatement(insertCompany);
+        statement.setString(1, object.getName());
+        statement.execute();
     }
-    public Integer getId() {
-        return id;
+    @Override
+    public void update(Company object) {
     }
-    public String toString() {
-        return this.id + ". " + this.name;
+
+    @Override
+    public void delete(int id) throws SQLException {
     }
 }

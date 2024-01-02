@@ -4,21 +4,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 abstract class CarSharingApp {
-    ArrayList<Company> companyArrayList;
-    ArrayList<Car> carArrayList;
+    ArrayList<Company> companyArrayList = new ArrayList<>();
+    ArrayList<Car> carArrayList = new ArrayList<>();
+    ArrayList<Customer> customerArrayList = new ArrayList<>();
+    DBClient client;
     private Company selectedCompany;
-    private Car selectedCar;
+    private Customer selectedCostumer;
     boolean running = true;
-    protected DBClient client;
     private String inputString;
-    public void setSelectedCar(Car selectedCar) {
-        this.selectedCar = selectedCar;
+    CarDao carDao;
+    CompanyDao companyDao;
+    CustomerDao customerDao;
+    public void setSelectedCar(Car car) {
+       this.selectedCostumer.setCar(car);
+    }
+    public void setSelectedCustomer(Customer selectedCostumer) {
+        this.selectedCostumer = selectedCostumer;
+    }
+    public Customer getSelectedCostumer() {
+        return selectedCostumer;
     }
     public void setSelectedCompany(Company selectedCompany) {
         this.selectedCompany = selectedCompany;
-    }
-    public Car getSelectedCar() {
-        return selectedCar;
     }
     public Company getSelectedCompany() {
         return selectedCompany;
@@ -26,9 +33,12 @@ abstract class CarSharingApp {
     public void transferData(CarSharingApp otherObject) {
         this.companyArrayList = otherObject.companyArrayList;
         this.carArrayList = otherObject.carArrayList;
-        this.client = otherObject.client;
-        this.selectedCar = otherObject.getSelectedCar();
+        this.customerArrayList = otherObject.customerArrayList;
         this.selectedCompany = otherObject.getSelectedCompany();
+        this.selectedCostumer = otherObject.selectedCostumer;
+        this.carDao = otherObject.carDao;
+        this.customerDao = otherObject.customerDao;
+        this.companyDao = otherObject.companyDao;
     }
     abstract String displayMessage();
     abstract CarSharingApp transition() throws SQLException, ClassNotFoundException;
